@@ -9,7 +9,7 @@ st.title("🏦 Customer Engagement & Retention Dashboard")
 # -------------------- LOAD DATA --------------------
 @st.cache_data
 def load_data():
-    df = pd.read_csv("data/churn.csv")
+    df = pd.read_csv("churn.csv")
     return df
 
 df = load_data()
