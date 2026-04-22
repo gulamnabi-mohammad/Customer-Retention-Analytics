@@ -7,15 +7,23 @@ st.set_page_config(page_title="Customer Retention Analytics", layout="wide")
 
 st.title("🏦 Customer Engagement & Retention Dashboard")
 
-# -------------------- LOAD DATA (FIXED PATH) --------------------
+# -------------------- LOAD DATA (AUTO SEARCH FIX) --------------------
 @st.cache_data
 def load_data():
-    base_path = os.path.dirname(__file__)
-    file_path = os.path.join(base_path, "churn.csv")  # file in same folder
-    df = pd.read_csv(file_path)
-    return df
+    for root, dirs, files in os.walk("."):
+        if "churn.csv" in files:
+            file_path = os.path.join(root, "churn.csv")
+            df = pd.read_csv(file_path)
+            return df
+    
+    st.error("churn.csv file not found in project!")
+    return pd.DataFrame()
 
 df = load_data()
+
+# Stop if data not loaded
+if df.empty:
+    st.stop()
 
 # -------------------- FEATURE ENGINEERING --------------------
 df['EngagementScore'] = (
