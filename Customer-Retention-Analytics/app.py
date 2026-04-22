@@ -1,15 +1,18 @@
 import streamlit as st
 import pandas as pd
+import os
 
 # -------------------- PAGE CONFIG --------------------
 st.set_page_config(page_title="Customer Retention Analytics", layout="wide")
 
 st.title("🏦 Customer Engagement & Retention Dashboard")
 
-# -------------------- LOAD DATA --------------------
+# -------------------- LOAD DATA (FIXED PATH) --------------------
 @st.cache_data
 def load_data():
-    df = pd.read_csv("churn.csv")
+    base_path = os.path.dirname(__file__)
+    file_path = os.path.join(base_path, "churn.csv")  # file in same folder
+    df = pd.read_csv(file_path)
     return df
 
 df = load_data()
@@ -103,6 +106,16 @@ risk_customers = df[
 
 st.metric("At-Risk Customers", len(risk_customers))
 st.dataframe(risk_customers.head(10))
+
+# -------------------- INSIGHTS --------------------
+st.subheader("📌 Key Insights")
+
+st.markdown("""
+- Customers with higher engagement scores show lower churn.
+- Multi-product users are more loyal compared to single-product users.
+- High-balance inactive customers are at high risk of churn.
+- Engagement is a stronger driver of retention than financial metrics.
+""")
 
 # -------------------- RAW DATA --------------------
 st.subheader("📄 Filtered Data")
